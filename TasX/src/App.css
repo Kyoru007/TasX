@@ -1,0 +1,94 @@
+/* App.css */
+.app {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.day {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.night {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+.toggle-btn {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.add-task {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-task input,
+.add-task textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-task button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.task-item.completed h3 {
+    text-decoration: line-through;
+}
+
+.task-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.task-actions {
+    margin-top: 10px;
+}
+
+.task-actions button {
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.task-actions button:first-child {
+    background-color: #28a745;
+    color: white;
+}
+
+.task-actions button:nth-child(2) {
+    background-color: #ffc107;
+    color: white;
+}
+
+.task-actions button:last-child {
+    background-color: #dc3545;
+    color: white;
+}
