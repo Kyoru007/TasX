@@ -28,8 +28,8 @@ Steps to Run Locally
 
     bash
 
-git clone https://github.com/your-username/todo-list-app.git
-cd todo-list-app
+git clone https://github.com/Kyoru/TasX.git
+cd TasX/TasX
 
 Install Dependencies:
 
@@ -43,7 +43,7 @@ bash
 
     npm start
 
-    This will run the app in development mode. Open http://localhost:3000 to view it in your browser.
+    This will run the app in development mode. Open http://localhost:5173 to view it in your browser.
 
 Usage
 
@@ -61,9 +61,8 @@ bash
 src/
 │
 ├── App.js        # Main component of the application
-├── App.css       # Styling for the app
-└── index.js      # Entry point for the app
+└── App.css       # Styling the app
 
 Customization
 
-Feel free to update the styling in App.css or modify the components in App.js to fit your requirements.
+Feel free to update the styling in App.css or modify the components in App.jsx to fit your requirements.
