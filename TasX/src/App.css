@@ -58,9 +58,10 @@
     cursor: pointer;
 }
 
-.task-item.completed h3 {
+.task-item.completed {
     text-decoration: line-through;
 }
+
 
 .task-item:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
