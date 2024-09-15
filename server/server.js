@@ -21,7 +21,7 @@ app.use(express.static('Public'));
 // GET all tasks
 // Fetch tasks sorted by priority and date
 app.get('/tasks', (req, res) => {
-    con.query('SELECT * FROM tasks ORDER BY priority DESC, due_date ASC', (err, results) => {
+    con.query('SELECT * FROM tasks', (err, results) => {
         if (err) return res.status(500).send(err);
         res.json(results);
     });
@@ -70,15 +70,7 @@ app.post('/tasks', (req, res) => {
     });
   });
   
-  // Move task to top
-  app.put('/tasks/top/:id', (req, res) => {
-    const { id } = req.params;
-    const sql = 'UPDATE tasks SET created_at = NOW() WHERE id = ?';
-    con.query(sql, [id], (err, result) => {
-      if (err) throw err;
-      res.send({ message: 'Task moved to top' });
-    });
-  });
+
 
 
 // Update a task (PUT request)

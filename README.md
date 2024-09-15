@@ -1,68 +1,94 @@
-A simple React-based To-Do List application that allows users to manage tasks with the ability to:
+TasX
 
-    Add tasks with descriptions.
-    Mark tasks as completed with a strikethrough effect.
-    Prioritize tasks by moving them to the top of the list.
-    Delete tasks.
-    Toggle between Day and Night mode for better visual comfort.
-    Hover over tasks to see a shadow effect.
-
+TasX is a task management application built with React and Node.js. It allows users to create, edit, delete, and complete tasks while keeping track of deadlines and timestamps. The application also supports light and dark mode.
 Features
 
-    CRUD Operations: Create, update, and delete tasks.
-    Task Completion: Mark tasks as completed with a strikethrough. Completed tasks will stay in the list until they are deleted.
-    Day/Night Mode: A button that allows switching between light and dark themes.
-    Hover Effects: Each task will have a shadow effect when hovered over.
-    Task Descriptions: You can add a description to each task.
-    Task Prioritization: Tasks can be prioritized and sorted at the top of the list with a click.
+    Add Tasks: Create new tasks with a description, due date, and priority status.
+    Edit Tasks: Modify existing tasks.
+    Delete Tasks: Remove tasks from the list.
+    Complete/Undo Tasks: Mark tasks as completed or revert them back.
+    View Dates: Display the task's creation date, last updated date, and due date.
+    Light/Dark Mode: Switch between light and dark themes.
+
+Tech Stack
+
+    Frontend: React, Axios, CSS
+    Backend: Node.js, Express
+    Database: MongoDB
 
 Installation
 Prerequisites
 
-    Node.js installed on your machine
-    npm (comes with Node.js)
+    Node.js and npm installed on your machine.
+    MongoDB instance running locally or remotely.
 
-Steps to Run Locally
+Setup
 
-    Clone the Repository:
+    Clone the Repository
 
     bash
 
-git clone https://github.com/Kyoru/TasX.git
-cd TasX/TasX
+git clone https://github.com/your-username/tasx.git
+cd tasx
 
-Install Dependencies:
+Install Dependencies
 
-bash
+    For the server:
 
+    bash
+
+cd server
 npm install
 
-Run the App:
+For the client:
 
 bash
 
-    npm start
+    cd ../client
+    npm install
 
-    This will run the app in development mode. Open http://localhost:5173 to view it in your browser.
+Configure Environment Variables
+
+Create a .env file in the server directory with the following content:
+
+env
+
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/tasx
+
+Run the Application
+
+    Start the backend server:
+
+    bash
+
+cd server
+node server.js
+
+Start the frontend:
+
+bash
+
+        cd ../client
+        npm start
+
+    Your application should now be running on http://localhost:3000 for the frontend and http://localhost:5000 for the backend.
+
+API Endpoints
+
+    GET /tasks: Retrieve all tasks.
+    POST /tasks: Create a new task.
+    PUT /tasks/
+    : Update an existing task.
+    DELETE /tasks/
+    : Delete a task.
+    PATCH /tasks/
+    /move-to-top: Move a task to the top of the list (optional).
 
 Usage
 
-    Add a new task by entering a title and description.
-    Mark tasks as completed by clicking the "Complete" button. Completed tasks will be crossed out.
-    Prioritize tasks by clicking the "Set Priority" button. This will move them to the top of the list.
-    Delete tasks by clicking the "Delete" button.
-    Toggle between Day and Night mode by clicking the toggle button at the top.
-    Hover over any task to see the shadow effect.
-
-Folder Structure
-
-bash
-
-src/
-│
-├── App.js        # Main component of the application
-└── App.css       # Styling the app
-
-Customization
-
-Feel free to update the styling in App.css or modify the components in App.jsx to fit your requirements.
+    Adding a Task: Fill in the task name, description, due date, and click "Add Task".
+    Editing a Task: Click "Edit" on a task to modify its details.
+    Completing/Undoing a Task: Click "Complete" or "Undo" to change the task's completion status.
+    Deleting a Task: Click "Delete" to remove a task from the list.
+    Switching Modes: Click "Day Mode" or "Night Mode" to toggle between light and dark themes.
