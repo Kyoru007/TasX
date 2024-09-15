@@ -9,6 +9,8 @@ const App = () => {
   const [dueDate, setDueDate] = useState('');
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [isNightMode, setIsNightMode] = useState(false);
+  const [completed, setCompleted] = useState(0); // Local state for completed status
+
 
   useEffect(() => {
     fetchTasks();
@@ -32,10 +34,9 @@ const App = () => {
           task: newTask,
           description,
           due_date: dueDate,
-          completed: false,
-          priority: false,
+          completed: 0, // Default to 0
         });
-        setTasks(prevTasks => [...prevTasks, res.data]); // Update task list locally
+        setTasks([...tasks, res.data]);
         resetTaskFields();
       } catch (error) {
         console.error('Error adding task:', error);
@@ -43,29 +44,35 @@ const App = () => {
     }
   };
 
+
+
   // Edit task
   const editTask = async (id) => {
-    if (newTask) {
+    if (newTask && dueDate) {
       try {
         const res = await axios.put(`http://localhost:5000/tasks/${id}`, {
           task: newTask,
           description,
           due_date: dueDate,
+          completed, // Ensure completed state is passed
         });
-        setTasks(prevTasks => prevTasks.map(task => task.id === id ? res.data : task));
+        setTasks(tasks.map(task => (task.id === id ? res.data : task)));
         resetTaskFields();
         setEditingTaskId(null);
       } catch (error) {
         console.error('Error editing task:', error);
       }
+    } else {
+      alert("Please provide both task name and due date");
     }
   };
+
 
   // Delete task
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/tasks/${id}`);
-      setTasks(prevTasks => prevTasks.filter(task => task.id !== id)); // Remove deleted task from local state
+      setTasks(tasks.filter(task => task.id !== id)); // Remove deleted task from local state
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -73,16 +80,22 @@ const App = () => {
 
   // Toggle completion of task
   const toggleComplete = async (id) => {
-    const taskToUpdate = tasks.find(task => task.id === id);
-    console.log('Task before update:', taskToUpdate);  // Log the task before update
-
     try {
-      const res = await axios.put(`http://localhost:5000/tasks/${id}`, {
-        ...taskToUpdate,
-        completed: !taskToUpdate.completed,
+      const taskToUpdate = tasks.find(task => task.id === id);
+      if (!taskToUpdate) {
+        console.error('Task not found');
+        return;
+      }
+
+      const updatedCompletedStatus = taskToUpdate.completed === 0 ? 1 : 0;
+
+      const res = await axios.put(`http://localhost:5000/tasks/${id}/completed`, {
+        completed: updatedCompletedStatus
       });
-      console.log('Updated task:', res.data);  // Log the updated task response
-      setTasks(tasks.map(task => (task.id === id ? res.data : task)));
+
+      console.log('Toggled completion:', res.data); // Check if completed is included
+
+      setTasks(tasks.map(task => (task.id === id ? { ...task, completed: updatedCompletedStatus } : task)));
     } catch (error) {
       console.error('Error toggling completion:', error);
     }
@@ -101,7 +114,8 @@ const App = () => {
   const startEdit = (task) => {
     setNewTask(task.task);
     setDescription(task.description);
-    setDueDate(task.due_date);
+    setDueDate(task.due_date.split('T')[0]); // Format the date for the input field
+    setCompleted(task.completed); // Set the completed status when editing
     setEditingTaskId(task.id);
   };
 
@@ -141,22 +155,21 @@ const App = () => {
       </div>
 
       <ul className='task-list'>
-        {tasks
-          .sort((a, b) => b.priority - a.priority)
-          .map(task => (
-            <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
-              <h3>{task.task}</h3>
-              {task.description && <p>{task.description}</p>}
-              {task.due_date && <p>Due: {new Date(task.due_date).toLocaleDateString()}</p>}
-              <div className='task-actions'>
-                <button onClick={() => toggleComplete(task.id)}>
-                  {task.completed ? 'Undo' : 'Complete'}
-                </button>
-                <button onClick={() => startEdit(task)}>Edit</button>
-                <button onClick={() => deleteTask(task.id)}>Delete</button>
-              </div>
-            </li>
-          ))}
+        {tasks.map(task => (
+          <li key={task.id} className={`task-item ${task.completed === 1 ? 'completed' : ''}`}>
+            <h3>{task.task}</h3>
+            {task.description && <p>{task.description}</p>}
+            {task.due_date && <p>Due: {new Date(task.due_date).toLocaleDateString()}</p>}
+            <div className='task-actions'>
+              <button onClick={() => toggleComplete(task.id)}>
+                {task.completed === 1 ? 'Undo' : 'Complete'}
+              </button>
+              <button onClick={() => startEdit(task)}>Edit</button>
+              <button onClick={() => deleteTask(task.id)}>Delete</button>
+            </div>
+          </li>
+        ))}
+
       </ul>
     </div>
   );

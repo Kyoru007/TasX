@@ -14,32 +14,28 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static('Public'));
 
-// Your routes for handling tasks go here
-
-
-
-// GET all tasks
-// Fetch tasks sorted by priority and date
+// Fetch all tasks
 app.get('/tasks', (req, res) => {
-    con.query('SELECT * FROM tasks', (err, results) => {
-        if (err) return res.status(500).send(err);
+    con.query('SELECT id, task, description, due_date, COALESCE(completed, 0) as completed FROM tasks', (err, results) => {
+        if (err) {
+            console.error('Error fetching tasks:', err);
+            return res.status(500).send('Server error');
+        }
         res.json(results);
     });
 });
 
-
-// POST a new task
-// Adding task
+// Add a new task
 app.post('/tasks', (req, res) => {
     const { task, description, due_date } = req.body;
     const sql = 'INSERT INTO tasks (task, description, due_date) VALUES (?, ?, ?)';
     con.query(sql, [task, description, due_date], (err, result) => {
         if (err) throw err;
-        res.status(201).send({ id: result.insertId, task, description, due_date, completed: false, priority: false });
+        res.status(201).send({ id: result.insertId, task, description, due_date, completed: 0 });
     });
 });
 
-// Editing task
+// Update a task
 app.put('/tasks/:id', (req, res) => {
     const { id } = req.params;
     const { task, description, due_date } = req.body;
@@ -50,61 +46,39 @@ app.put('/tasks/:id', (req, res) => {
     });
 });
 
-// Deleting task
-app.delete('/tasks/:id', (req, res) => {
-    const { id } = req.params;
-    const sql = 'DELETE FROM tasks WHERE id = ?';
-    con.query(sql, [id], (err, result) => {
-        if (err) throw err;
-        res.send({ message: 'Task deleted' });
-    });
-});
-
-// Marking task as completed
-app.put('/tasks/:id', (req, res) => {
+// Update the completed status of a task
+app.put('/tasks/:id/completed', (req, res) => {
     const { id } = req.params;
     const { completed } = req.body;
-
-    console.log('Task ID:', id);  // Log task id
-    console.log('Completed status:', completed);  // Log completed status
 
     const sql = 'UPDATE tasks SET completed = ? WHERE id = ?';
     con.query(sql, [completed, id], (err, result) => {
         if (err) {
             console.error('Error updating task:', err);
-            return res.status(500).send('Error updating task');
+            return res.status(500).send('Server error');
         }
-        res.send(req.body);
+
+        // Fetch the updated task
+        con.query('SELECT * FROM tasks WHERE id = ?', [id], (err, result) => {
+            if (err) {
+                console.error('Error fetching updated task:', err);
+                return res.status(500).send('Server error');
+            }
+            res.json(result[0]); // Send the updated task back to the client
+        });
     });
 });
 
-
-
-
-
-
-// Update a task (PUT request)
-app.put('/tasks/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedTask = req.body;
-    con.query('UPDATE tasks SET ? WHERE id = ?', [updatedTask, id], (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.send(updatedTask);
-    });
-});
-
+// Delete a task
 app.delete('/tasks/:id', (req, res) => {
     const { id } = req.params;
-    con.query('DELETE FROM tasks WHERE id = ?', [id], (err, results) => {
+    con.query('DELETE FROM tasks WHERE id = ?', [id], (err, result) => {
         if (err) return res.status(500).send(err);
         res.send('Task deleted');
     });
 });
 
-
-
 // Start the server
-
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 });
