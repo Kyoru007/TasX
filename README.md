@@ -1,94 +1,113 @@
-TasX
+Here’s the updated README.md without the priority feature:
 
-TasX is a task management application built with React and Node.js. It allows users to create, edit, delete, and complete tasks while keeping track of deadlines and timestamps. The application also supports light and dark mode.
-Features
+markdown
 
-    Add Tasks: Create new tasks with a description, due date, and priority status.
-    Edit Tasks: Modify existing tasks.
-    Delete Tasks: Remove tasks from the list.
-    Complete/Undo Tasks: Mark tasks as completed or revert them back.
-    View Dates: Display the task's creation date, last updated date, and due date.
-    Light/Dark Mode: Switch between light and dark themes.
+# TasX
 
-Tech Stack
+TasX is a task management application built with a React frontend and a Node.js backend connected to a MySQL database.
 
-    Frontend: React, Axios, CSS
-    Backend: Node.js, Express
-    Database: MongoDB
+## Getting Started
 
-Installation
-Prerequisites
+### Prerequisites
 
-    Node.js and npm installed on your machine.
-    MongoDB instance running locally or remotely.
+- Node.js and npm
+- MySQL
 
-Setup
+### Installation
 
-    Clone the Repository
+1. **Clone the repository:**
+
+   ```bash
+   git clone <repository-url>
+   cd TasX
+
+    Navigate to the client folder and install dependencies:
 
     bash
 
-git clone https://github.com/your-username/tasx.git
-cd tasx
-
-Install Dependencies
-
-    For the server:
-
-    bash
-
-cd server
+cd client
 npm install
 
-For the client:
+Install backend dependencies:
+
+Navigate back to the main folder:
 
 bash
 
-    cd ../client
+cd ..
+
+Then install dependencies for the backend:
+
+bash
+
     npm install
 
-Configure Environment Variables
+Database Setup
 
-Create a .env file in the server directory with the following content:
+    Create a MySQL database named tasx.
 
-env
+    You can do this using a MySQL client or through the command line:
 
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/tasx
+    sql
 
-Run the Application
+CREATE DATABASE tasx;
+
+Create the tasks table.
+
+Use the following SQL script to create the tasks table:
+
+sql
+
+    USE tasx;
+
+    CREATE TABLE tasks (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      task VARCHAR(255) NOT NULL,
+      description TEXT,
+      due_date DATE,
+      completed BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+
+    This script creates a table with columns for task details, completion status, and timestamps for when the task was created and last updated.
+
+Running the Application
 
     Start the backend server:
 
     bash
 
-cd server
 node server.js
 
-Start the frontend:
+Start the frontend development server:
+
+Navigate to the client folder:
 
 bash
 
-        cd ../client
-        npm start
+    cd client
+    npm run dev
 
-    Your application should now be running on http://localhost:3000 for the frontend and http://localhost:5000 for the backend.
+Features
 
-API Endpoints
+    Add, edit, delete, and complete tasks.
+    View tasks with their creation dates, due dates, and update dates.
+    Tasks can be marked as completed with a line-through style and reverted with an undo button.
 
-    GET /tasks: Retrieve all tasks.
-    POST /tasks: Create a new task.
-    PUT /tasks/
-    : Update an existing task.
-    DELETE /tasks/
-    : Delete a task.
-    PATCH /tasks/
-    /move-to-top: Move a task to the top of the list (optional).
+Technologies Used
 
-Usage
+    React
+    Node.js
+    Express
+    MySQL
 
-    Adding a Task: Fill in the task name, description, due date, and click "Add Task".
-    Editing a Task: Click "Edit" on a task to modify its details.
-    Completing/Undoing a Task: Click "Complete" or "Undo" to change the task's completion status.
-    Deleting a Task: Click "Delete" to remove a task from the list.
-    Switching Modes: Click "Day Mode" or "Night Mode" to toggle between light and dark themes.
+Troubleshooting
+
+    Ensure that the MySQL server is running and accessible.
+    Verify that all dependencies are installed.
+    Check the console for any errors and address them accordingly.
+
+License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
