@@ -55,7 +55,8 @@ class Prepare extends Command {
     }
     const cmdPacket = new Packets.PrepareStatement(
       this.query,
-      connection.config.charsetNumber
+      connection.config.charsetNumber,
+      this.options.values
     );
     connection.writePacket(cmdPacket.toPacket(1));
     return Prepare.prototype.prepareHeader;
@@ -72,10 +73,19 @@ class Prepare extends Command {
       return Prepare.prototype.readField;
     } 
     return this.prepareDone(connection);
-    
   }
 
   readParameter(packet, connection) {
+    // there might be scenarios when mysql server reports more parameters than
+    // are actually present in the array of parameter definitions.
+    // if EOF packet is received we switch to "read fields" state if there are
+    // any fields reported by the server, otherwise we finish the command.
+    if (packet.isEOF()) {
+      if (this.fieldCount > 0) {
+        return Prepare.prototype.readField;
+      }
+      return this.prepareDone(connection);
+    }
     const def = new Packets.ColumnDefinition(packet, connection.clientEncoding);
     this.parameterDefinitions.push(def);
     if (this.parameterDefinitions.length === this.parameterCount) {
@@ -85,6 +95,9 @@ class Prepare extends Command {
   }
 
   readField(packet, connection) {
+    if (packet.isEOF()) {
+      return this.prepareDone(connection);
+    }
     const def = new Packets.ColumnDefinition(packet, connection.clientEncoding);
     this.fields.push(def);
     if (this.fields.length === this.fieldCount) {

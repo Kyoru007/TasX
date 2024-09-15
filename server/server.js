@@ -34,42 +34,52 @@ app.post('/tasks', (req, res) => {
     const { task, description, due_date } = req.body;
     const sql = 'INSERT INTO tasks (task, description, due_date) VALUES (?, ?, ?)';
     con.query(sql, [task, description, due_date], (err, result) => {
-      if (err) throw err;
-      res.status(201).send({ id: result.insertId, task, description, due_date, completed: false, priority: false });
+        if (err) throw err;
+        res.status(201).send({ id: result.insertId, task, description, due_date, completed: false, priority: false });
     });
-  });
-  
-  // Editing task
-  app.put('/tasks/:id', (req, res) => {
+});
+
+// Editing task
+app.put('/tasks/:id', (req, res) => {
     const { id } = req.params;
     const { task, description, due_date } = req.body;
     const sql = 'UPDATE tasks SET task = ?, description = ?, due_date = ? WHERE id = ?';
     con.query(sql, [task, description, due_date, id], (err, result) => {
-      if (err) throw err;
-      res.send({ id, task, description, due_date });
+        if (err) throw err;
+        res.send({ id, task, description, due_date });
     });
-  });
-  
-  // Deleting task
-  app.delete('/tasks/:id', (req, res) => {
+});
+
+// Deleting task
+app.delete('/tasks/:id', (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM tasks WHERE id = ?';
     con.query(sql, [id], (err, result) => {
-      if (err) throw err;
-      res.send({ message: 'Task deleted' });
+        if (err) throw err;
+        res.send({ message: 'Task deleted' });
     });
-  });
-  
-  // Marking task as completed
-  app.put('/tasks/complete/:id', (req, res) => {
+});
+
+// Marking task as completed
+app.put('/tasks/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'UPDATE tasks SET completed = !completed WHERE id = ?';
-    con.query(sql, [id], (err, result) => {
-      if (err) throw err;
-      res.send({ message: 'Task status updated' });
+    const { completed } = req.body;
+
+    console.log('Task ID:', id);  // Log task id
+    console.log('Completed status:', completed);  // Log completed status
+
+    const sql = 'UPDATE tasks SET completed = ? WHERE id = ?';
+    con.query(sql, [completed, id], (err, result) => {
+        if (err) {
+            console.error('Error updating task:', err);
+            return res.status(500).send('Error updating task');
+        }
+        res.send(req.body);
     });
-  });
-  
+});
+
+
+
 
 
 

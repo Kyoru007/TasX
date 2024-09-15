@@ -73,18 +73,22 @@ const App = () => {
 
   // Toggle completion of task
   const toggleComplete = async (id) => {
+    const taskToUpdate = tasks.find(task => task.id === id);
+    console.log('Task before update:', taskToUpdate);  // Log the task before update
+
     try {
-      const taskToUpdate = tasks.find(task => task.id === id);
-      console.log(`Toggling completion for task ID: ${id}`, taskToUpdate);
       const res = await axios.put(`http://localhost:5000/tasks/${id}`, {
         ...taskToUpdate,
         completed: !taskToUpdate.completed,
       });
-      setTasks(prevTasks => prevTasks.map(task => task.id === id ? res.data : task));
+      console.log('Updated task:', res.data);  // Log the updated task response
+      setTasks(tasks.map(task => (task.id === id ? res.data : task)));
     } catch (error) {
       console.error('Error toggling completion:', error);
     }
   };
+
+
 
   // Reset task input fields
   const resetTaskFields = () => {
