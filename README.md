@@ -42,15 +42,12 @@ bash
 
     npm install
 
-Database Setup
+Database Setup     
+Create a MySQL database named tasx.
 
-    Create a MySQL database named tasx.
+    CREATE DATABASE tasx;
 
-    You can do this using a MySQL client or through the command line:
 
-    sql
-
-CREATE DATABASE tasx;
 
 Create the tasks table.
 
