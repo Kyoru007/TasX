@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import mysql from 'mysql2';
 import con from './db.js'; // Ensure this is pointing to your MySQL connection file
 
 const app = express();
